@@ -1,3 +1,9 @@
+#[diff]
+#	tool = vimdiff
+#[diff "tool"]
+#	prompt = false
+#[difftool]
+#	prompt = false
 [difftool]
     prompt = true
 [diff]
