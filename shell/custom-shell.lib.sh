@@ -4,19 +4,19 @@ enableDebug() {
   set -eu -o history -o histexpand -o pipefail
 }
 
-trimspaces() {
+trimSpaces() {
   xargs <<< $1
 }
 
-pinfo() {
+pInfo() {
   echo -e "[$(date "+%F | %X %p %Z")] \e[32mINFO: $*\e[0m"
 }
 
-pwarn() {
+pWarn() {
   echo -e "[$(date "+%F | %X %p %Z")] \e[31mWARN: $*\e[0m" 1>&2
 }
 
-perror() {
+pError() {
   echo -e "[$(date "+%F | %X %p %Z")] \e[31mERROR: $*\e[0m" 1>&2
 }
 
@@ -26,8 +26,10 @@ lst-zsh-themes() {
 
 set-zsh-theme() {
   local theme="${1}"
-  [[ -z "${theme}" ]] && { echo "Need to provide theme!" } || {
-    echo "Setting theme to: '${theme}' ..."
+  [[ -z "${theme}" ]] && { 
+    echo "Need to provide theme!" 
+  } || {
+    pInfo "Setting theme to: '${theme}' ..."
     sed -i -e "s/^ZSH_THEME=.*/ZSH_THEME=\"${theme}\"/g" "${HOME}/.zshrc"
     source "${HOME}/.zshrc"
   }
