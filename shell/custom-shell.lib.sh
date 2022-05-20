@@ -5,10 +5,6 @@ enableDebug() {
 }
 
 trimspaces() {
-  sed -e 's/^[[:space:]]*//' <<< $1
-}
-
-trimspaces2() {
   xargs <<< $1
 }
 
