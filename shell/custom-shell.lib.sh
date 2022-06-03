@@ -1,4 +1,4 @@
-#!/bin/zsh
+# Custom shell functions
 
 enableDebug() {
   set -eu -o history -o histexpand -o pipefail
@@ -20,17 +20,7 @@ pError() {
   echo -e "[$(date "+%F | %X %p %Z")] \e[31mERROR: $*\e[0m" 1>&2
 }
 
-lst-zsh-themes() {
-  ls "${ZSH}/themes"
+pHLine() {
+  printf "%$(tput cols)s\n" | tr " " "-"
 }
 
-set-zsh-theme() {
-  local theme="${1}"
-  [[ -z "${theme}" ]] && { 
-    echo "Need to provide theme!" 
-  } || {
-    pInfo "Setting theme to: '${theme}' ..."
-    sed -i -e "s/^ZSH_THEME=.*/ZSH_THEME=\"${theme}\"/g" "${HOME}/.zshrc"
-    source "${HOME}/.zshrc"
-  }
-}
