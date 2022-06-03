@@ -5,7 +5,11 @@ enableDebug() {
 }
 
 trimSpaces() {
-  xargs <<< $1
+  echo "${1}" | xargs
+}
+
+pTimestamp() {
+  date "+%F | %X %p %Z"
 }
 
 pInfo() {
