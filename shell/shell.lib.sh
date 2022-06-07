@@ -9,7 +9,7 @@ trimSpaces() {
 }
 
 pTimestamp() {
-  date "+%F | %X %Z"
+  date "+%F | %r %Z"
 }
 
 pInfo() {
