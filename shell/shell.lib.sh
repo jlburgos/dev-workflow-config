@@ -9,19 +9,19 @@ trimSpaces() {
 }
 
 pTimestamp() {
-  date "+%F | %X %p %Z"
+  date "+%F | %X %Z"
 }
 
 pInfo() {
-  echo -e "[$(date "+%F | %X %p %Z")] \e[32mINFO: $*\e[0m"
+  echo -e "[$(pTimestamp)] \e[32mINFO: $*\e[0m"
 }
 
 pWarn() {
-  echo -e "[$(date "+%F | %X %p %Z")] \e[31mWARN: $*\e[0m" 1>&2
+  echo -e "[$(pTimestamp)] \e[31mWARN: $*\e[0m" 1>&2
 }
 
 pError() {
-  echo -e "[$(date "+%F | %X %p %Z")] \e[31mERROR: $*\e[0m" 1>&2
+  echo -e "[$(pTimestamp)] \e[31mERROR: $*\e[0m" 1>&2
 }
 
 pHLine() {
