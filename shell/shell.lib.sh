@@ -1,12 +1,18 @@
 #!/bin/sh
 
+#############################
+#############################
 # Custom shell aliases and functions
+#############################
+#############################
 
 # Shell Flags
 ## Notes: https://gist.github.com/mohanpedala/1e2ff5661761d3abd0385e8223e16425#original-reference
 ## Notes: http://redsymbol.net/articles/unofficial-bash-strict-mode/
 
-## Aliases
+#############################
+## ALIASES
+#############################
 
 # Enable aliases in shell scripts if 'shopt' command available
 [ -x "$(command -v shopt)" ] && {
@@ -17,7 +23,9 @@
 alias setTrace='set -x'
 alias unsetTrace='{ set +x; } 2>/dev/null'
 
-## Functions
+#############################
+## SCRIPTING METHODS
+#############################
 
 trimSpaces() {
   printf "${1}" | xargs
@@ -97,6 +105,9 @@ remoteCmd() {
   ssh -t ${FYRE_QB} "${INIT_CMDS}; ${1}"
 }
 
+#############################
+## DOCKER METHODS
+#############################
 
 rshToDocker() {
   local -r dockerimg=${1}
@@ -128,3 +139,10 @@ cpFromDocker() {
   docker rm -v ${id}
 }
 
+#############################
+## GIT METHODS
+#############################
+#
+gbranch() {
+  git rev-parse --abbrev-ref=strict HEAD
+}
