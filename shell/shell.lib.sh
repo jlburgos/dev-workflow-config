@@ -40,10 +40,9 @@ pNewLine() {
 }
 
 pHLine() {
-  [ ${#} -eq 0 ] && {
-    local -r MAX_LINES=1
-  } || {
-    local -r MAX_LINES=${1}
+  local MAX_LINES=1
+  [ ${#} -ne 0 ] && {
+    local MAX_LINES=${1}
   }
   local -r NUM_COLS=$(tput cols)
   local -r NUM_SPACES=$(( ${NUM_COLS} * ${MAX_LINES} ))
@@ -95,6 +94,16 @@ ynQuery() {
   done
 }
 
+runCmd() {
+  local cmd=${1}
+  [ -z ${cmd} ] && {
+    pError 'ERROR: Require cmd as first argument!\n'
+    return 1
+  }
+  printf "+ ${cmd}\n"
+  eval "${cmd}"
+}
+
 remoteCmd() {
   [ "${#}" -ne 1 ] && {
     pError "Need to provide string param containing remote command\n"
@@ -112,7 +121,7 @@ remoteCmd() {
 rshToDocker() {
   local -r dockerimg=${1}
   [ -z ${dockerimg} ] && {
-    echo "Missing docker image"
+    pError "Missing docker image\n"
     return 1
   }
   docker run -it --entrypoint=/bin/sh ${dockerimg}
@@ -123,15 +132,15 @@ cpFromDocker() {
   local -r srcpath=${2}
   local -r dstpath=${3}
   [ -z ${dockerimg} ] && {
-    echo "Missing docker image"
+    pError "Missing docker image\n"
     return 1
   }
   [ -z ${srcpath} ] && {
-    echo "Missing docker container file path"
+    pError "Missing docker container file path\n"
     return 1
   }
   [ -z ${dstpath} ] && {
-    echo "Missing local host file path"
+    pError "Missing local host file path\n"
     return 1
   }
   local -r id=$(docker create ${dockerimg})
