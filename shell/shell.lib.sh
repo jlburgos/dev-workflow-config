@@ -105,13 +105,14 @@ runCmd() {
 }
 
 remoteCmd() {
-  [ "${#}" -ne 1 ] && {
-    pError "Need to provide string param containing remote command\n"
+  [ "${#}" -ne 2 ] && {
+    pError "Need to provide SSH target and remote command as two string parameters\n"
     return 1
   }
-  pNote "Running remote command via SSH: ${1}\n"
-  local -r INIT_CMDS="source .bashrc && source .bash_profile"
-  ssh -t ${FYRE_QB} "${INIT_CMDS}; ${1}"
+  local -r SSH_TARGET=${1}
+  local -r SSH_COMMAND=${2}
+  pNote "Connecting remote host via ${1} to run remote command :: ${2}\n"
+  ssh -t ${SSH_TARGET} "${SSH_COMMAND}"
 }
 
 #############################
@@ -151,7 +152,7 @@ cpFromDocker() {
 #############################
 ## GIT METHODS
 #############################
-#
+
 gbranch() {
   git rev-parse --abbrev-ref=strict HEAD
 }
