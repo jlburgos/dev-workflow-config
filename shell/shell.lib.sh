@@ -156,3 +156,27 @@ cpFromDocker() {
 gbranch() {
   git rev-parse --abbrev-ref=strict HEAD
 }
+
+#############################
+## SHELL METHODS
+#############################
+
+cdback() {
+  local -r dirname=${1}
+  [[ -z ${dirname} ]] && {
+    pError "Missing required parameter: Parent Directory Name\n"
+    return 1
+  }
+  ## Note: https://stackoverflow.com/questions/22537804/retrieve-a-word-after-a-regular-expression-in-shell-script
+  ##       ZSH uses ${match} for array while bash has ${BASH_REMATCH}.
+  ## Note: https://stackoverflow.com/questions/1335815/how-to-slice-an-array-in-bash
+  ##       Made use of nested ${..} bash constructs to rebuild directory path.
+  ## Note: Had to do the bash version a bit differently due to "substitution error" with nested ${..} construct.
+  ##       Also, array indexing was different between zsh and bash for some reason...
+  local -r pattern="^(.+)\/(${dirname})\/(.*)$"
+  [[ ${PWD} =~ ${pattern} ]] && {
+    [[ -n $ZSH_VERSION ]] && cd "${${match[@]:0:2}/ //}" || cd "$(printf ${BASH_REMATCH[@]:1:2} | tr ' ' '/')"
+  } || {
+    pError "Parent Directory '${dirname}' could not be found\n"
+  }
+}
