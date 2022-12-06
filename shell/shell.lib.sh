@@ -1,5 +1,3 @@
-#!/bin/sh
-
 #############################
 #############################
 # Custom shell aliases and functions
@@ -162,7 +160,7 @@ gbranch() {
 #############################
 
 cdback() {
-  local -r dirname=${1}
+  local -r dirname="${1}"
   [[ -z ${dirname} ]] && {
     pError "Missing required parameter: Parent Directory Name\n"
     return 1
@@ -178,5 +176,15 @@ cdback() {
     [[ -n $ZSH_VERSION ]] && cd "${${match[@]:0:2}/ //}" || cd "$(printf ${BASH_REMATCH[@]:1:2} | tr ' ' '/')"
   } || {
     pError "Parent Directory '${dirname}' could not be found\n"
+  }
+}
+
+cdfile() {
+  local -r filename="${1}"
+  local -r dirpath=$(find . -name "${filename}" -print -quit)
+  [[ -z ${dirpath} ]] && {
+    pError "No file found matching search name \"${filename}\"\n"
+  } || {
+    cd "$(dirname "${dirpath}")"
   }
 }
