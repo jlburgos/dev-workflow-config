@@ -117,13 +117,22 @@ remoteCmd() {
 ## DOCKER METHODS
 #############################
 
-rshToDocker() {
+rshToDockerImage() {
   local -r dockerimg=${1}
   [ -z ${dockerimg} ] && {
     pError "Missing docker image\n"
     return 1
   }
   docker run -it --entrypoint=/bin/sh ${dockerimg}
+}
+
+rshToDockerContainer() {
+  local -r containerid=${1}
+  [ -z ${containerid} ] && {
+    pError "Missing container id\n"
+    return 1
+  }
+  docker exec -it ${containerid} \\bin\\bash
 }
 
 cpFromDocker() {
