@@ -18,8 +18,8 @@
 }
 
 # Source: https://stackoverflow.com/questions/13195655/bash-set-x-without-it-being-printed
-alias setTrace='set -x'
-alias unsetTrace='{ set +x; } 2>/dev/null'
+alias setTrace='set -o xtrace'
+alias unsetTrace='{ set +o xtrace; } 2>/dev/null'
 
 #############################
 ## SCRIPTING METHODS
@@ -72,10 +72,23 @@ pQuery() {
   printf "[$(pTimestamp)] \e[34m\e[4mQuery: ${*}\e[0m\e[0m "
 }
 
+getUserInput() {
+  [ ${#} -lt 1 ] && {
+    pError "Need to provide two params: (1) Sink variable name and (2) Optional custom prompt"
+    return 1;
+  }
+  pQuery "${2:-Please enter the value you want to set} "
+  read ${1}
+}
+
 waitToContinue() {
-  pQuery "Press any key to continue ..."
+  pQuery "${1:-Press any key to continue ...}"
   local IGNORED_INPUT
-  read -n1 IGNORED_INPUT
+  [[ -n $ZSH_VERSION ]] && {
+    read -k1 IGNORED_INPUT
+  } || {
+    read -n1 IGNORED_INPUT
+  }
   printf "\n"
 }
 
@@ -94,7 +107,7 @@ ynQuery() {
 
 runCmd() {
   local cmd=${1}
-  [ -z ${cmd} ] && {
+  [[ -z ${cmd} ]] && {
     pError 'ERROR: Require cmd as first argument!\n'
     return 1
   }
@@ -103,7 +116,7 @@ runCmd() {
 }
 
 remoteCmd() {
-  [ "${#}" -ne 2 ] && {
+  [[ "${#}" -ne 2 ]] && {
     pError "Need to provide SSH target and remote command as two string parameters\n"
     return 1
   }
@@ -119,7 +132,7 @@ remoteCmd() {
 
 rshToDockerImage() {
   local -r dockerimg=${1}
-  [ -z ${dockerimg} ] && {
+  [[ -z ${dockerimg} ]] && {
     pError "Missing docker image\n"
     return 1
   }
@@ -128,7 +141,7 @@ rshToDockerImage() {
 
 rshToDockerContainer() {
   local -r containerid=${1}
-  [ -z ${containerid} ] && {
+  [[ -z ${containerid} ]] && {
     pError "Missing container id\n"
     return 1
   }
@@ -139,15 +152,15 @@ cpFromDocker() {
   local -r dockerimg=${1}
   local -r srcpath=${2}
   local -r dstpath=${3}
-  [ -z ${dockerimg} ] && {
+  [[ -z ${dockerimg} ]] && {
     pError "Missing docker image\n"
     return 1
   }
-  [ -z ${srcpath} ] && {
+  [[ -z ${srcpath} ]] && {
     pError "Missing docker container file path\n"
     return 1
   }
-  [ -z ${dstpath} ] && {
+  [[ -z ${dstpath} ]] && {
     pError "Missing local host file path\n"
     return 1
   }
@@ -167,6 +180,13 @@ gbranch() {
 #############################
 ## SHELL METHODS
 #############################
+
+backup() {
+  for filepath in "${@}"
+  do
+    cp -var ${filepath} ${filepath}.bak
+  done
+}
 
 cdback() {
   local -r dirname="${1}"
@@ -188,6 +208,16 @@ cdback() {
   }
 }
 
+nvimfind() {
+  local -r filename="${1}"
+  local -r filepaths=$(find . -name "${filename}")
+  [[ -z ${filepaths} ]] && {
+    pError "No file found matching search name \"${filename}\"\n"
+  } || {
+    nvim -p "${filepaths}"
+  }
+}
+
 cdfile() {
   local -r filename="${1}"
   local -r dirpath=$(find . -name "${filename}" -print -quit)
@@ -196,4 +226,8 @@ cdfile() {
   } || {
     cd "$(dirname "${dirpath}")"
   }
+}
+
+filescontaining() {
+  grep -ir "${1}" ${2:-.} | grep -v "^Binary file" | cut -d ':' -f1 | sort | uniq
 }
