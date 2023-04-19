@@ -160,8 +160,33 @@ cpFromDocker() {
 ## GIT METHODS
 #############################
 
-gbranch() {
+gBranch() {
   git rev-parse --abbrev-ref=strict HEAD
+}
+
+gBranchUpstream() {
+  #git remote show origin | sed -n '/HEAD branch/s/.*: //p'
+  git remote show origin | awk '/HEAD branch/ {print $NF}'
+}
+
+gDiffStatus() {
+  git status -v | bat --language=diff
+}
+
+gDiffRemote() {
+  git diff origin/$(gBranch) $(gBranch) | bat --language=diff
+}
+
+gDiffLocalUpstream() {
+  git diff $(gBranchUpstream) $(gBranch) | bat --language=diff
+}
+
+gDiffRemoteUpstream() {
+  git diff origin/$(gBranchUpstream) $(gBranch) | bat --language=diff
+}
+
+gUndoLastCommit() {
+  git reset --soft HEAD~1
 }
 
 #############################
