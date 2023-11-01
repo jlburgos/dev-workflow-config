@@ -299,24 +299,3 @@ filescontaining() {
   local -r dirpath="${2:-.}"
   grep -ir "${pattern}" "${dirpath}" | grep -v "^Binary file" | cut -d ':' -f1 | sort | uniq
 }
-
-#############################
-## Custom zsh functions for oh-my-zsh
-#############################
-
-lst_zsh_themes() {
-  #ls "${ZSH}/themes"
-  omz theme list
-}
-
-set_zsh_theme() {
-  local theme="${1}"
-  [[ -z "${theme}" ]] && { 
-    echo "Need to provide theme!" 
-  } || {
-    pInfo "Setting theme to: '${theme}' ..."
-    #sed -i -e "s/^ZSH_THEME=.*/ZSH_THEME=\"${theme}\"/g" "${HOME}/.zshrc"
-    #source "${HOME}/.zshrc"
-    omz theme set "${theme}"
-  }
-}
