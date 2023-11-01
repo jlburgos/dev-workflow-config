@@ -116,7 +116,7 @@ runCmd() {
     pError 'ERROR: Require cmd as first argument!\n'
     return 1
   }
-  printf "+ ${cmd}\n"
+  pInfo "+ ${cmd}\n"
   eval "${cmd}"
 }
 
@@ -132,78 +132,98 @@ remoteCmd() {
 }
 
 #############################
-## DOCKER METHODS
+## CONTAINER METHODS
 #############################
 
-rshToDockerImage() {
-  local -r dockerimg=${1}
-  [[ -z ${dockerimg} ]] && {
-    pError "Missing docker image\n"
+rshToContainerImage() {
+  local -r containerimg=${1}
+  [[ -z ${containerimg} ]] && {
+    pError "Missing container image\n"
     return 1
   }
-  docker run -it --entrypoint=/bin/sh ${dockerimg}
+  podman run -it --entrypoint=/bin/sh ${containerimg}
 }
 
-rshToDockerContainer() {
+rshIntoContainer() {
   local -r containerid=${1}
   [[ -z ${containerid} ]] && {
     pError "Missing container id\n"
     return 1
   }
-  docker exec -it ${containerid} \\bin\\bash
+  podman exec -it ${containerid} \\bin\\bash
 }
 
-cpFromDocker() {
-  local -r dockerimg=${1}
+cpFromContainer() {
+  local -r containerimg=${1}
   local -r srcpath=${2}
   local -r dstpath=${3}
-  [[ -z ${dockerimg} ]] && {
-    pError "Missing docker image\n"
+  [[ -z ${containerimg} ]] && {
+    pError "Missing container image\n"
     return 1
   }
   [[ -z ${srcpath} ]] && {
-    pError "Missing docker container file path\n"
+    pError "Missing container container file path\n"
     return 1
   }
   [[ -z ${dstpath} ]] && {
     pError "Missing local host file path\n"
     return 1
   }
-  local -r id=$(docker create ${dockerimg})
-  docker cp ${id}:${srcpath} ${dstpath}
-  docker rm -v ${id}
+  local -r id=$(container create ${containerimg})
+  podman cp ${id}:${srcpath} ${dstpath}
+  podman rm -v ${id}
 }
 
 #############################
 ## GIT METHODS
 #############################
 
-gBranch() {
+gitBranch() {
   git rev-parse --abbrev-ref=strict HEAD
 }
 
-gBranchUpstream() {
+gitBranchUpstream() {
   #git remote show origin | sed -n '/HEAD branch/s/.*: //p'
   git remote show origin | awk '/HEAD branch/ {print $NF}'
 }
 
-gDiffStatus() {
+gitDiffFile() {
+  [[ $# -lt 1 ]] && {
+    pError "Need to provide a filename!\n"
+    return 1
+  }
+  git diff -- $(find . -iname ${1})
+}
+
+gitDiffTool() {
+  git difftool --no-prompt
+}
+
+gitDiffStatus() {
   git status -v | bat --language=diff
 }
 
-gDiffRemote() {
-  git diff origin/$(gBranch) $(gBranch) | bat --language=diff
+gitDiffRemote() {
+  git diff origin/$(gitBranch) $(gitBranch) | bat --language=diff
 }
 
-gDiffLocalUpstream() {
-  git diff $(gBranchUpstream) $(gBranch) | bat --language=diff
+gitDiffLocalUpstream() {
+  git diff $(gitBranchUpstream) $(gitBranch) | bat --language=diff
 }
 
-gDiffRemoteUpstream() {
-  git diff origin/$(gBranchUpstream) $(gBranch) | bat --language=diff
+gitDiffRemoteUpstream() {
+  git diff origin/$(gitBranchUpstream) $(gitBranch) | bat --language=diff
 }
 
-gUndoLastCommit() {
+gitDiffFileRemoteUpstream() {
+  [[ ! -z ${1} ]] && {
+    git diff origin/$(gitBranchUpstream) $(gitBranch) -- ${1} | bat --language=diff
+  } || {
+    pError "Need to provide path to file!\n"
+  }
+}
+
+gitUndoLastCommit() {
   git reset --soft HEAD~1
 }
 
@@ -211,10 +231,21 @@ gUndoLastCommit() {
 ## SHELL METHODS
 #############################
 
+ln_for_usr() {
+  local -r filepath=$(realpath "${1}")
+  [[ -z "${1}" || -z "${filepath}" ]] && {
+    pError "No valid filepath provided\n"
+    return 1
+  }
+  local -r filename=$(echo "${filepath}" | rev | cut -d '/' -f1 | rev)
+  set -o xtrace
+  sudo ln -s "${filepath}" "/usr/local/bin/${filename}"
+}
+
 backup() {
   for filepath in "${@}"
   do
-    cp -var ${filepath} ${filepath}.bak
+    cp -va ${filepath} ${filepath}.bak
   done
 }
 
@@ -235,6 +266,7 @@ cdback() {
     [[ -n $ZSH_VERSION ]] && cd "${${match[@]:0:2}/ //}" || cd "$(printf ${BASH_REMATCH[@]:1:2} | tr ' ' '/')"
   } || {
     pError "Parent Directory '${dirname}' could not be found\n"
+    return 1
   }
 }
 
@@ -259,5 +291,32 @@ cdfile() {
 }
 
 filescontaining() {
-  grep -ir "${1}" ${2:-.} | grep -v "^Binary file" | cut -d ':' -f1 | sort | uniq
+  [[ -z "${1}" ]] && {
+    pError "Missing the pattern argument!\n"
+    return 1;
+  }
+  local -r pattern="${1}"
+  local -r dirpath="${2:-.}"
+  grep -ir "${pattern}" "${dirpath}" | grep -v "^Binary file" | cut -d ':' -f1 | sort | uniq
+}
+
+#############################
+## Custom zsh functions for oh-my-zsh
+#############################
+
+lst_zsh_themes() {
+  #ls "${ZSH}/themes"
+  omz theme list
+}
+
+set_zsh_theme() {
+  local theme="${1}"
+  [[ -z "${theme}" ]] && { 
+    echo "Need to provide theme!" 
+  } || {
+    pInfo "Setting theme to: '${theme}' ..."
+    #sed -i -e "s/^ZSH_THEME=.*/ZSH_THEME=\"${theme}\"/g" "${HOME}/.zshrc"
+    #source "${HOME}/.zshrc"
+    omz theme set "${theme}"
+  }
 }
