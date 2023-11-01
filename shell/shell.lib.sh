@@ -21,6 +21,11 @@
 alias setTrace='set -o xtrace'
 alias unsetTrace='{ set +o xtrace; } 2>/dev/null'
 
+# Source: https://stackoverflow.com/questions/749544/pipe-to-from-the-clipboard-in-a-bash-script
+alias setclip="xclip -selection c"
+alias getclip="xclip -selection c -o"
+
+
 #############################
 ## SCRIPTING METHODS
 #############################
