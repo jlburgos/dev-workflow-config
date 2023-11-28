@@ -25,6 +25,15 @@ alias unsetTrace='{ set +o xtrace; } 2>/dev/null'
 alias setclip="xclip -selection c"
 alias getclip="xclip -selection c -o"
 
+COLOR_BLUE='\033[0;34m'
+COLOR_YELLOW='\033[0;33m'
+COLOR_YELLOW_BOLD='\033[1;33m'
+COLOR_GREEN='\033[0;32m'
+COLOR_RED='\033[0;31m'
+
+BLINK='\033[5m'
+UNDERLINE='\033[4m'
+EFFECT_NONE='\033[0m'
 
 #############################
 ## SCRIPTING METHODS
@@ -53,36 +62,32 @@ pHLine() {
 }
 
 pNote() {
-  printf "[$(pTimestamp)] \e[1;33mNote: ${*}\e[0m"
-}
-
-pNotice() {
-  printf "[$(pTimestamp)] \e[32m\e[4mNotice: ${*}\e[0m\e[0m"
-}
-
-pInfo() {
-  printf "[$(pTimestamp)] \e[32mINFO: ${*}\e[0m"
-}
-
-pWarn() {
-  printf "[$(pTimestamp)] \e[1;33mWARN: ${*}\e[0m"
-}
-
-pError() {
-  printf "[$(pTimestamp)] \e[31m\e[4mERROR: ${*}\e[0m\e[0m"
+  printf "[$(pTimestamp)] ${COLOR_YELLOW_BOLD}${UNDERLINE}Note: ${*}${EFFECT_NONE}${EFFECT_NONE}"
 }
 
 pQuery() {
-  ## Note: Extra space at the end is intentional
-  printf "[$(pTimestamp)] \e[34m\e[4mQuery: ${*}\e[0m\e[0m "
+  ## Note: Extra space at the end is intentional!
+  printf "[$(pTimestamp)] ${COLOR_BLUE}${UNDERLINE}${BLINK}Query: ${*}${EFFECT_NONE}${EFFECT_NONE}${EFFECT_NONE} "
+}
+
+pInfo() {
+  printf "[$(pTimestamp)] ${COLOR_GREEN}INFO: ${*}${EFFECT_NONE}"
+}
+
+pWarn() {
+  printf "[$(pTimestamp)] ${COLOR_YELLOW}WARN: ${*}${EFFECT_NONE}"
+}
+
+pError() {
+  printf "[$(pTimestamp)] ${COLOR_RED}${UNDERLINE}ERROR: ${*}${EFFECT_NONE}${EFFECT_NONE}"
 }
 
 getUserInput() {
-  [ ${#} -lt 1 ] && {
-    pError "Need to provide two params: (1) Sink variable name and (2) Optional custom prompt"
+  [ ${#} -lt 2 ] && {
+    pError "Need to provide two params: (1) Sink variable name and (2) the user prompt."
     return 1;
   }
-  pQuery "${2:-Please enter the value you want to set} "
+  pQuery "${2} "
   read ${1}
 }
 
