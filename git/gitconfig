@@ -5,12 +5,12 @@
 #[difftool]
 #	prompt = false
 [difftool]
-    prompt = true
+  prompt = true
 [diff]
-    tool = nvimdiff
+  tool = nvimdiff
 [difftool "nvimdiff"]
-    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+  cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 [alias]
-    logs = log --show-signature
+  logs = log --show-signature
 [core]
-	editor = vim
+  editor = nvim
