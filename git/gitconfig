@@ -1,13 +1,10 @@
-#[diff]
-#	tool = vimdiff
+[diff]
+  #tool = vimdiff
+  tool = nvimdiff
 #[diff "tool"]
-#	prompt = false
-#[difftool]
-#	prompt = false
+  #prompt = false
 [difftool]
   prompt = true
-[diff]
-  tool = nvimdiff
 [difftool "nvimdiff"]
   cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 [alias]
