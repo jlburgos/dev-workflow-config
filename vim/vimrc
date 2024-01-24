@@ -35,6 +35,8 @@ set tabstop=2
 set scrolloff=7
 
 "" Line
+set cursorline
+set cursorcolumn
 set number
 set wrap
 set magic
