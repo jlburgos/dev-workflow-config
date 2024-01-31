@@ -36,7 +36,7 @@ local options = {
   scrolloff = 8,                           -- is one of my fav
   sidescrolloff = 8,
   guifont = "monospace:h17",               -- the font used in graphical neovim applications
-  statusline = "Filepath: %f%m | Line,Column: [%l,%c] | Scroll Percentage: (%%%p) | Char: [%b|%B]", -- Do ':h statusline' for details!
+  statusline = "Filepath: %m%f%m | Line,Column: [%l,%c] | Scroll Percentage: (%%%p) | Char: [%b|%B]", -- Do ':h statusline' for details!
 }
 
 vim.opt.shortmess:append "c"
