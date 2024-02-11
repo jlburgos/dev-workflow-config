@@ -1,9 +1,6 @@
 "" Author: Juan Burgos
 "" Purpose: Make VIM Better
 
-"" Infect with Pathogen
-""execute pathogen#infect() ""not all systems use pathogen
-
 "" File
 set encoding=utf8
 
@@ -41,7 +38,6 @@ set number
 set wrap
 set magic
 set statusline+=%F
-set background=dark
 set backspace=indent,eol,start
 filetype plugin indent on
 
@@ -50,7 +46,7 @@ set mouse=a
 
 "" Visual config
 syntax on
-colorscheme industry
+colorscheme evening
 
 "" Make sure makefile editing uses tabs and not spaces
 autocmd FileType make setlocal noexpandtab
