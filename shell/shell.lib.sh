@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #############################
 #############################
 # Custom shell aliases and functions
