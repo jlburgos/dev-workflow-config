@@ -255,6 +255,16 @@ backup() {
   done
 }
 
+softdelete() {
+  local -r filepath=$(realpath -q "${1}")
+  [[ -z "${1}" || -z "${filepath}" ]] && {
+    pError "No valid filepath was found for argument '${1}'"
+    return 1
+  }
+  local -r new_filepath="/tmp/$(echo -n "${filepath}" | tr '/' '_')"
+  mv -v ${filepath} ${new_filepath}
+}
+
 cdback() {
   local -r dirname="${1}"
   [[ -z ${dirname} ]] && {
