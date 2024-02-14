@@ -14,7 +14,7 @@
 #############################
 
 # Enable aliases in shell scripts if 'shopt' command available
-[ -x "$(command -v shopt)" ] && {
+[[ -x "$(command -v shopt)" ]] && {
   shopt -s expand_aliases
 }
 
@@ -54,7 +54,7 @@ pNewLine() {
 
 pHLine() {
   local MAX_LINES=1
-  [ ${#} -ne 0 ] && {
+  [[ ${#} -ne 0 ]] && {
     local MAX_LINES=${1}
   }
   local -r NUM_COLS=$(tput cols)
@@ -84,7 +84,7 @@ pError() {
 }
 
 getUserInput() {
-  [ ${#} -lt 2 ] && {
+  [[ ${#} -lt 2 ]] && {
     pError "Need to provide two params: (1) Sink variable name and (2) the user prompt."
     return 1;
   }
@@ -95,11 +95,7 @@ getUserInput() {
 waitToContinue() {
   pQuery "${1:-Press any key to continue ...}"
   local IGNORED_INPUT
-  [[ -n $ZSH_VERSION ]] && {
-    read -k1 IGNORED_INPUT
-  } || {
-    read -n1 IGNORED_INPUT
-  }
+  [[ -n $ZSH_VERSION ]] && read -k1 IGNORED_INPUT || read -n1 IGNORED_INPUT
   printf "\n"
 }
 
@@ -109,9 +105,14 @@ ynQuery() {
     pQuery "${1} [Y/N]"
     read CHOICE
     case ${CHOICE} in
-      y|Y) return 0 ;;
-      n|N) return 1 ;;
-      *) pError "Input '${CHOICE}' is invalid, please try again\n"
+      y|Y)
+        return 0
+        ;;
+      n|N)
+        return 1
+        ;;
+      *)
+        pError "Input '${CHOICE}' is invalid, please try again\n"
     esac
   done
 }
@@ -222,11 +223,11 @@ gitDiffRemoteUpstream() {
 }
 
 gitDiffFileRemoteUpstream() {
-  [[ ! -z ${1} ]] && {
-    git diff origin/$(gitBranchUpstream) $(gitBranch) -- ${1} | bat --language=diff
-  } || {
+  [[ -z ${1} ]] && {
     pError "Need to provide path to file!\n"
+    return 1
   }
+  git diff origin/$(gitBranchUpstream) $(gitBranch) -- ${1} | bat --language=diff
 }
 
 gitUndoLastCommit() {
@@ -278,12 +279,11 @@ cdback() {
   ## Note: Had to do the bash version a bit differently due to "substitution error" with nested ${..} construct.
   ##       Also, array indexing was different between zsh and bash for some reason...
   local -r pattern="^(.+)\/(${dirname})\/(.*)$"
-  [[ ${PWD} =~ ${pattern} ]] && {
-    [[ -n $ZSH_VERSION ]] && cd "${${match[@]:0:2}/ //}" || cd "$(printf ${BASH_REMATCH[@]:1:2} | tr ' ' '/')"
-  } || {
+  [[ ! ${PWD} =~ ${pattern} ]] && {
     pError "Parent Directory '${dirname}' could not be found\n"
     return 1
   }
+  [[ -n $ZSH_VERSION ]] && cd "${${match[@]:0:2}/ //}" || cd "$(printf ${BASH_REMATCH[@]:1:2} | tr ' ' '/')"
 }
 
 nvimfind() {
@@ -291,9 +291,9 @@ nvimfind() {
   local -r filepaths=$(find . -name "${filename}")
   [[ -z ${filepaths} ]] && {
     pError "No file found matching search name \"${filename}\"\n"
-  } || {
-    nvim -p "${filepaths}"
+    return 1
   }
+  nvim -p "${filepaths}"
 }
 
 cdfile() {
@@ -301,9 +301,9 @@ cdfile() {
   local -r dirpath=$(find . -name "${filename}" -print -quit)
   [[ -z ${dirpath} ]] && {
     pError "No file found matching search name \"${filename}\"\n"
-  } || {
-    cd "$(dirname "${dirpath}")"
+    return 1
   }
+  cd "$(dirname "${dirpath}")"
 }
 
 filescontaining() {
