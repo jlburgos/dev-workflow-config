@@ -1,5 +1,6 @@
 local options = {
   backup = false,                          -- creates a backup file
+  writebackup = false,                     -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
   clipboard = "unnamedplus",               -- allows neovim to access the system clipboard
   cmdheight = 2,                           -- more space in the neovim command line for displaying messages
   completeopt = { "menuone", "noselect" }, -- mostly just for cmp
@@ -21,8 +22,6 @@ local options = {
   timeoutlen = 1000,                       -- time to wait for a mapped sequence to complete (in milliseconds)
   undofile = true,                         -- enable persistent undo
   updatetime = 300,                        -- faster completion (4000ms default)
-  backup = false,
-  writebackup = false,                     -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
   expandtab = true,                        -- convert tabs to spaces
   shiftwidth = 2,                          -- the number of spaces inserted for each indentation
   tabstop = 2,                             -- insert 2 spaces for a tab
@@ -36,7 +35,7 @@ local options = {
   scrolloff = 8,                           -- is one of my fav
   sidescrolloff = 8,
   guifont = "monospace:h17",               -- the font used in graphical neovim applications
-  statusline = "Filepath: %m%f%m | Line,Column: [%l,%c] | Scroll Percentage: (%%%p) | Char: [%b|%B]", -- Do ':h statusline' for details!
+  statusline = "Filepath: %m%f%m | Scroll: (%%%p) | Line,Column: [%l,%c] | Cursor: [Char:%{matchstr(getline('.'), '\\%' . col('.') . 'c.')}|Dec:%b|Hex:%B]", -- Do ':h statusline' for details!
 }
 
 vim.opt.shortmess:append "c"
