@@ -36,6 +36,14 @@ BLINK='\033[5m'
 UNDERLINE='\033[4m'
 EFFECT_NONE='\033[0m'
 
+## Identify build system
+if [[ -x "$(command -v podman)" ]]
+then
+  CONTAINER_CLI=podman
+else
+  CONTAINER_CLI=docker
+fi
+
 #############################
 ## SCRIPTING METHODS
 #############################
@@ -148,7 +156,7 @@ rshToContainerImage() {
     pError "Missing container image\n"
     return 1
   }
-  podman run -it --entrypoint=/bin/sh ${containerimg}
+  ${CONTAINER_CLI} run -it --entrypoint=/bin/sh ${containerimg}
 }
 
 rshIntoContainer() {
@@ -157,15 +165,23 @@ rshIntoContainer() {
     pError "Missing container id\n"
     return 1
   }
-  podman exec -it ${containerid} \\bin\\bash
+  ${CONTAINER_CLI} exec -it ${containerid} \\bin\\bash
+}
+
+createContainerFromImg() {
+  local -r containerimg=${1}
+  [[ -z ${containerimg} ]] && {
+    return 1
+  }
+  ${CONTAINER_CLI} create ${containerimg}
 }
 
 cpFromContainer() {
   local -r containerimg=${1}
   local -r srcpath=${2}
   local -r dstpath=${3}
-  [[ -z ${containerimg} ]] && {
     pError "Missing container image\n"
+  [[ -z ${containerimg} ]] && {
     return 1
   }
   [[ -z ${srcpath} ]] && {
@@ -176,9 +192,9 @@ cpFromContainer() {
     pError "Missing local host file path\n"
     return 1
   }
-  local -r id=$(container create ${containerimg})
-  podman cp ${id}:${srcpath} ${dstpath}
-  podman rm -v ${id}
+  local -r id=$(${CONTAINER_CLI} create ${containerimg})
+  ${CONTAINER_CLI} cp ${id}:${srcpath} ${dstpath}
+  ${CONTAINER_CLI} rm -v ${id}
 }
 
 #############################
