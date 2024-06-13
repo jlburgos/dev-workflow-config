@@ -13,5 +13,4 @@ set -o xtrace
 
 [ -f ${HOME}/.oh-my-zsh/custom/themes/custom-ys.zsh-theme ] || {
   ln -s ${PWD}/zsh/custom-ys.zsh-theme ${HOME}/.oh-my-zsh/custom/themes/custom-ys.zsh-theme 
-  omz theme set custom-ys
 }
