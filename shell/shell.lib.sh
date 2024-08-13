@@ -342,8 +342,7 @@ overwriteWithCopy() {
     pError "There is no valid file: \"${filepath}\"\n"
     return 2
   }
-  local -r newpath=$(find . -type f -name $(basename script.sh) | grep -v "\./$(basename script.sh)")
-  echo "newpath:${newpath}"
+  local -r newpath=$(find . -type f -name $(basename ${filepath}) | grep -v "${filepath}")
   [[ $(echo -e "${newpath}" | wc -l) -gt 1 ]] && {
     pError "Found multiple matches for $(basename ${filepath}) ...\n"
     echo -e "${newpath}"
