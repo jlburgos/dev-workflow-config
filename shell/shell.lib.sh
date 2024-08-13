@@ -262,7 +262,7 @@ ln_for_usr() {
   }
   local -r filename=$(echo "${filepath}" | rev | cut -d '/' -f1 | rev)
   set -o xtrace
-  sudo ln -s "${filepath}" "/usr/local/bin/${filename}"
+  sudo ln -s "${filepath}" "/usr/local/bin/${filename/.sh/}"
 }
 
 backup() {
