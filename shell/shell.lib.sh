@@ -331,3 +331,27 @@ filescontaining() {
   local -r dirpath="${2:-.}"
   grep -ir "${pattern}" "${dirpath}" | grep -v "^Binary file" | cut -d ':' -f1 | sort | uniq
 }
+
+overwriteWithCopy() {
+  local -r filepath="${1}"
+  [[ -z ${filepath} ]] && {
+    pError "Missing valid filepath!\n"
+    return 1
+  }
+  [[ ! -f ${filepath} ]] && {
+    pError "There is no valid file: \"${filepath}\"\n"
+    return 2
+  }
+  local -r newpath=$(find . -type f -name $(basename script.sh) | grep -v "\./$(basename script.sh)")
+  echo "newpath:${newpath}"
+  [[ $(echo -e "${newpath}" | wc -l) -gt 1 ]] && {
+    pError "Found multiple matches for $(basename ${filepath}) ...\n"
+    echo -e "${newpath}"
+    return 2
+  }
+  [[ ! -f ${newpath} ]] && {
+    pError "Found no such file $(basename ${filepath}) in any sub-directories!\n"
+    return 3
+  }
+  mv -vf ${filepath} ${newpath}
+}
