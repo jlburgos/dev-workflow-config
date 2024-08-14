@@ -65,9 +65,15 @@ pHLine() {
   [[ ${#} -ne 0 ]] && {
     local MAX_LINES=${1}
   }
-  local -r NUM_COLS=$(tput cols)
-  local -r NUM_SPACES=$(( ${NUM_COLS} * ${MAX_LINES} ))
+  local -r NUM_SPACES=$(( $(tput cols) * ${MAX_LINES} ))
   printf "%${NUM_SPACES}s\n" | tr " " "-"
+}
+
+pHeader() {
+  local -r lenOfString=$(( ${#1} + 8 ))
+  printf "%${lenOfString}s\n" | tr " " "-"
+  echo "--- ${1} ---"
+  printf "%${lenOfString}s\n" | tr " " "-"
 }
 
 pNote() {
