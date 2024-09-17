@@ -1,8 +1,5 @@
 [diff]
-  #tool = vimdiff
   tool = nvimdiff
-#[diff "tool"]
-  #prompt = false
 [difftool]
   prompt = true
 [difftool "nvimdiff"]
