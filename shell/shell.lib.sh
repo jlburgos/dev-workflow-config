@@ -9,6 +9,12 @@
 ## Notes: https://gist.github.com/mohanpedala/1e2ff5661761d3abd0385e8223e16425#original-reference
 ## Notes: http://redsymbol.net/articles/unofficial-bash-strict-mode/
 
+##############################################
+## Set custom terminal colors
+##############################################
+export CLICOLOR=1
+export LS_COLORS="di=96;40:ln=35;40:so=32;40:pi=33;40:ex=31;40:bd=34;46:cd=34;43:su=0;41:sg=0;46:tw=0;42:ow=0;43:"
+
 #############################
 ## ALIASES
 #############################
