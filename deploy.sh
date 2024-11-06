@@ -15,7 +15,8 @@ set -o xtrace
 ## Common git stuff
 [ -f ${HOME}/.gitconfig ] || ln -s ${PWD}/git/gitconfig ${HOME}/.gitconfig
 
-## Terminal multiplexer stuff
+## Terminal stuff
+[ -f ${HOME}/.shell.lib ] || ln -s ${PWD}/shell/shell.lib ${HOME}/.shell.lib
 [ -f ${HOME}/.screenrc ]  || ln -s ${PWD}/screen/screenrc ${HOME}/.screenrc
 [ -f ${HOME}/.tmux.conf ] || ln -s ${PWD}/tmux/tmux.conf ${HOME}/.tmux.conf
 
