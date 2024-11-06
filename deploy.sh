@@ -16,7 +16,7 @@ set -o xtrace
 [ -f ${HOME}/.gitconfig ] || ln -s ${PWD}/git/gitconfig ${HOME}/.gitconfig
 
 ## Terminal stuff
-[ -f ${HOME}/.shell.lib ] || ln -s ${PWD}/shell/shell.lib ${HOME}/.shell.lib
+[ -f ${HOME}/.shell.lib.sh ] || ln -s ${PWD}/shell/shell.lib.sh ${HOME}/.shell.lib.sh
 [ -f ${HOME}/.screenrc ]  || ln -s ${PWD}/screen/screenrc ${HOME}/.screenrc
 [ -f ${HOME}/.tmux.conf ] || ln -s ${PWD}/tmux/tmux.conf ${HOME}/.tmux.conf
 
@@ -29,6 +29,6 @@ set -o xtrace
 
 ## Shell stuff
 [ -f ${HOME}/.config/oh-my-zsh/custom/themes/custom-ys.zsh-theme ] || {
-  [ -d ${HOME}/.config/oh-my-zsh] || ln -s ${HOME}/.oh-my-zsh ${HOME}/.config/oh-my-zsh
+  [ -d ${HOME}/.config/oh-my-zsh ] || ln -s ${HOME}/.oh-my-zsh ${HOME}/.config/oh-my-zsh
   ln -s ${PWD}/zsh/custom-ys.zsh-theme ${HOME}/.config/oh-my-zsh/custom/themes/custom-ys.zsh-theme 
 }
