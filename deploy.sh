@@ -12,6 +12,9 @@ script_dir="$(dirname "$(realpath "$0")")"
 
 set -o xtrace
 
+## Set up in ${HOME}/.config directory
+[ -f ${HOME}/.config/dev-workflow-config ] || ln -s ${PWD} ${HOME}/.config/dev-workflow-config
+
 ## Common git stuff
 [ -f ${HOME}/.gitconfig ] || ln -s ${PWD}/git/gitconfig ${HOME}/.gitconfig
 
