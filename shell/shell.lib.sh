@@ -213,6 +213,9 @@ cpFromContainer() {
 ## GIT METHODS
 #############################
 
+## Need this for commit signing to work properly!
+export GPG_TTY=$(tty)
+
 gitBranch() {
   git rev-parse --abbrev-ref=strict HEAD
 }
