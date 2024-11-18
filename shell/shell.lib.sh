@@ -13,7 +13,7 @@
 ## Set custom terminal colors
 ##############################################
 export CLICOLOR=1
-export LS_COLORS="di=96;40:ln=35;40:so=32;40:pi=33;40:ex=92;40:bd=46;46:cd=46;43:su=0;41:sg=0;46:tw=0;42:ow=0;43:"
+export LS_COLORS="di=96;40:ln=36;40:so=32;40:pi=33;40:ex=92;40:bd=46;46:cd=46;43:su=0;41:sg=0;46:tw=0;42:ow=0;43:"
 
 #############################
 ## ALIASES
