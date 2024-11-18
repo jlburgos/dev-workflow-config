@@ -253,6 +253,10 @@ gitDiffRemoteUpstream() {
   git diff origin/$(gitBranchUpstream) $(gitBranch) | bat --language=diff
 }
 
+gitDiffRemoteUpstreamList() {
+  gitDiffRemoteUpstream | grep "^diff" | awk '{print $NF}' | rev | cut -d '/' -f1 | rev
+}
+
 gitDiffFileRemoteUpstream() {
   [[ -z ${1} ]] && {
     pError "Need to provide path to file!\n"
