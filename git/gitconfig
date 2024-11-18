@@ -8,3 +8,5 @@
   logs = log --show-signature
 [core]
   editor = nvim
+[color "interactive"]
+	prompt = cyan
